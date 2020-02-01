@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     private void SpawnAllTools()
     // 修復に使うオブジェクトを全て生成する
     {
-
     }
 
     private IEnumerator GameLoop()
