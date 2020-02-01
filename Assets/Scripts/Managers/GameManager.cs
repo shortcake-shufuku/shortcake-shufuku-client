@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     // プレー時間
-    public float PlayTime = 20f; 
+    [SerializeField]
+    private float PlayTime = 20f; 
     // 開始アニメーション(「スタート！」等のテキスト表示含むの所要時間)
     public float StartWait = 3f; 
     // 終了アニメーション(「できたぁぁぁぁ！！」等のテキスト表示含むの所要時間)
@@ -61,25 +62,31 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameLoop()
     {
-        ResetCakeAndTools();
-        DisableControls();
-        CameraRigControl.Reset();
-
-        yield return _StartWait;
-
-        yield return StartCoroutine(RoundStarting());
-        yield return StartCoroutine(RoundPlaying());
-        yield return StartCoroutine(RoundEnding());
-
+        bool IsLoop = true; // TODO: 終了条件に合わせてFalse入れる
+        
         // 無限にゲームはループする
-        StartCoroutine(GameLoop());
+        while (IsLoop)
+        {
+            ResetCakeAndTools();
+            DisableControls();
+            //   CameraRigControl.Reset();
+
+            yield return _StartWait;
+
+            yield return StartCoroutine(RoundStarting());
+            yield return StartCoroutine(RoundPlaying());
+            yield return StartCoroutine(RoundEnding());
+
+            yield return new WaitForEndOfFrame();
+
+        }
     }
 
     private IEnumerator RoundStarting()
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset();
+       // CameraRigControl.Reset();
 
         MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 

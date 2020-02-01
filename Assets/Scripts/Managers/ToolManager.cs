@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToolManager
+[System.Serializable]
+public class ToolManager : MonoBehaviour
 {
     public Transform SpawnPoint;
     public GameObject Prefab;
