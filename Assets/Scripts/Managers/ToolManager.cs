@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToolManager
+public class ToolManager : MonoBehaviour
 {
-    public Transform SpawnPoint;
-    public GameObject Prefab;
+    private GameObject Instance;
+    private GameObject CakePrefab;
 
-    [HideInInspector] public GameObject Instance;
+    public void Create(Transform SpawnPoint)
+    {
+        CakePrefab = Resources.Load("Prefabs/Cake") as GameObject;
+        Instance = Instantiate(Resources.Load<GameObject>("Prefabs/Cake"), SpawnPoint.position, SpawnPoint.rotation);
+        Setup();
+    }
 
     public void Setup()
     {
         // TODO
     }
 
-    public void Reset()
+    public void Reset(Transform SpawnPoint)
     {
         Instance.transform.position = SpawnPoint.position;
         Instance.transform.rotation = SpawnPoint.rotation;

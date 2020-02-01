@@ -3,59 +3,77 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class GameManager : MonoBehaviour
 {
+    // TODO: structにする
+
     // プレー時間
-    public float PlayTime = 20f; 
+    [SerializeField]
+    private float PlayTime = 20f; 
     // 開始アニメーション(「スタート！」等のテキスト表示含むの所要時間)
-    public float StartWait = 3f; 
+    [SerializeField]
+    private float StartWait = 3f; 
     // 終了アニメーション(「できたぁぁぁぁ！！」等のテキスト表示含むの所要時間)
-    public float FinishWait = 3f; 
+    [SerializeField]
+    private float FinishWait = 3f; 
 
-    public CameraRigControl CameraRigControl;
-    public Text MessageText;
+    
+    [SerializeField]
+    private Transform CameraStartPoint;
+    [SerializeField]
+    private Transform CameraPlayPoint;
 
-    // 壊れたり直したりするケーキ。あとでもしかしたら目的別に生成するかもしれないけど。
-    public GameObject CakePrefab;
-    public CakeManager CakeManager;
+    [SerializeField]
+    private Text MessageText;
+
+    [SerializeField]
+    private Transform CakeSpawnPoint;
+    [SerializeField]
+    private GameObject CakePrefab;
+    private CakeManager CakeManager;
+
     // 修復したりするために操作できるオブジェクト達。
-    public ToolManager[] ToolManagers;
+    [SerializeField]
+    private Transform[] ToolSpawnPoints;
+    [SerializeField]
+    private GameObject[] ToolPrefabs;
+    private ToolManager ToolManager;
+    
+    private ToolManager[] ToolManagers;
 
     private WaitForSeconds _StartWait;
     private WaitForSeconds _FinishWait;
     private WaitForSeconds _PlayTime;
-
 
     private void Start()
     {
         _StartWait = new WaitForSeconds(StartWait);
         _FinishWait = new WaitForSeconds(FinishWait);
         _PlayTime = new WaitForSeconds(PlayTime);
+
+        CakePrefab.AddComponent<CakeManager>();
+
+        // for (int i = 0; i < ToolPrefabs.Length; i++)
+        // {
+        //     ToolPrefabs[i].AddComponent
+        //     toolManager
+        // }
+        CakeManager.Create(CakeSpawnPoint);
         
-        SpawnAllTools();
+        SpawnCakeAndTools();
 
         StartCoroutine(GameLoop());
     }
 
-    private void SpawnAllTools()
+    private void SpawnCakeAndTools()
     // 修復に使うオブジェクトを全て生成する
     {
-        CakeManager.Instance = Instantiate(
-            CakePrefab,
-            CakeManager.SpawnPoint.position,
-            CakeManager.SpawnPoint.rotation
-        ) as GameObject;
+        CakeManager.Create(CakeSpawnPoint);
 
-
-        foreach (ToolManager toolManager in ToolManagers)
+        for (int i = 0; i < ToolManagers.Length; i++)
         {
-            toolManager.Instance = Instantiate(
-                toolManager.Prefab,
-                toolManager.SpawnPoint.position,
-                toolManager.SpawnPoint.rotation
-            ) as GameObject;
-
-            toolManager.Setup();
+            ToolManagers[i].Create(ToolSpawnPoints[i]);
         }
     }
 
@@ -63,7 +81,7 @@ public class GameManager : MonoBehaviour
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset();
+        CameraRigControl.Reset(CameraStartPoint);
 
         yield return _StartWait;
 
@@ -79,7 +97,7 @@ public class GameManager : MonoBehaviour
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset();
+        CameraRigControl.Move(CameraStartPoint);
 
         MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 
@@ -114,11 +132,11 @@ public class GameManager : MonoBehaviour
     
     private void ResetCakeAndTools()
     {
-        CakeManager.Reset();
+        CakeManager.Reset(CakeSpawnPoint);
 
-        foreach(ToolManager toolManager in ToolManagers)
+        for (int i = 0; i < ToolManagers.Length; i++)
         {
-            toolManager.Reset();
+            ToolManagers[i].Reset(ToolSpawnPoints[i]);
         }
     }
 
