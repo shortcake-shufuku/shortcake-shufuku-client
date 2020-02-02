@@ -9,14 +9,14 @@ public class CanvasControl : MonoBehaviour
     [HideInInspector] public Button Button;
 
     // Start is called before the first frame update
-    void Start()
+    public void Init()
     {
         MessageText = GetComponentInChildren<Text>();
         Button = GetComponentInChildren<Button>();
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         
     }

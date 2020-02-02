@@ -7,29 +7,27 @@ public class CameraRigControl : MonoBehaviour
   private Camera Camera;
   private Vector3 MoveVelocity;
 
-
   private void Awake()
   {
     Camera = GetComponentInChildren<Camera>();
   }
 
+  public void Init(Transform CameraStartPoint)
+  {
+    Camera.transform.localPosition = CameraStartPoint.localPosition;
+    Camera.transform.eulerAngles = CameraStartPoint.rotation.eulerAngles;
+  }
+
   private void Move(Transform DesiredPoint)
   {
-    transform.position = Vector3.SmoothDamp
+    Camera.transform.position = Vector3.SmoothDamp
       (
-        transform.position,
+        Camera.transform.position,
         DesiredPoint.position,
         ref MoveVelocity,
         DampTime
       );
 
-    transform.Rotate(90.0f, 0.0f, 0.0f);
-  }
-
-
-  public void Reset(Transform DesiredPoint)
-  /* for use by GameManager */
-  {
-    transform.position = DesiredPoint.position;
+    Camera.transform.Rotate(90.0f, 0.0f, 0.0f);
   }
 }

@@ -36,8 +36,9 @@ public class GameManager : MonoBehaviour
         _FinishWait = new WaitForSeconds(FinishWait);
         _PlayTime = new WaitForSeconds(PlayTime);
         
-        Debug.Log("hai");
-        CanvasControl.MessageText.text = "ケーキ修復！"; //TODO: もっとマシな開始メッセージ
+        CanvasControl.Init();
+
+        CanvasControl.MessageText.text = $"ケーキ修復！"; //TODO: もっとマシな開始メッセージ
 
         SpawnAllTools();
 
@@ -53,23 +54,13 @@ public class GameManager : MonoBehaviour
             CakeSpawnPoint.rotation
         ) as GameObject;
 
-        // foreach (ToolManager toolManager in ToolManagers)
-        // {
-        //     toolManager.Instance = Instantiate(
-        //         toolManager.Prefab,
-        //         toolManager.SpawnPoint.position,
-        //         toolManager.SpawnPoint.rotation
-        //     ) as GameObject;
-
-        //     toolManager.Setup();
-        // }
     }
 
     private IEnumerator GameLoop()
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset(CameraStartPoint);
+        CameraRigControl.Init(CameraStartPoint);
 
         yield return _StartWait;
 
@@ -86,7 +77,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("RoundStarting");
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset(CameraPlayPoint);
+        CameraRigControl.Init(CameraPlayPoint);
 
         CanvasControl.MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 
