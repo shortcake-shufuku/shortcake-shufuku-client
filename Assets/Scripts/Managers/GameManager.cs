@@ -13,15 +13,15 @@ public class GameManager : MonoBehaviour
     public float FinishWait = 3f; 
 
     public CameraRigControl CameraRigControl;
+    public CanvasControl CanvasControl;
 
     public Transform CameraStartPoint;
     public Transform CameraPlayPoint;
 
-    public Text MessageText;
-
     // 壊れたり直したりするケーキ。あとでもしかしたら目的別に生成するかもしれないけど。
     public GameObject CakePrefab;
     public CakeManager CakeManager;
+    public Transform CakeSpawnPoint;
     // 修復したりするために操作できるオブジェクト達。
     public ToolManager[] ToolManagers;
 
@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         _PlayTime = new WaitForSeconds(PlayTime);
         
         Debug.Log("hai");
+        CanvasControl.MessageText.text = "ケーキ修復！"; //TODO: もっとマシな開始メッセージ
 
         SpawnAllTools();
 
@@ -48,21 +49,20 @@ public class GameManager : MonoBehaviour
     {
         CakeManager.Instance = Instantiate(
             CakePrefab,
-            CakeManager.SpawnPoint.position,
-            CakeManager.SpawnPoint.rotation
+            CakeSpawnPoint.position,
+            CakeSpawnPoint.rotation
         ) as GameObject;
 
+        // foreach (ToolManager toolManager in ToolManagers)
+        // {
+        //     toolManager.Instance = Instantiate(
+        //         toolManager.Prefab,
+        //         toolManager.SpawnPoint.position,
+        //         toolManager.SpawnPoint.rotation
+        //     ) as GameObject;
 
-        foreach (ToolManager toolManager in ToolManagers)
-        {
-            toolManager.Instance = Instantiate(
-                toolManager.Prefab,
-                toolManager.SpawnPoint.position,
-                toolManager.SpawnPoint.rotation
-            ) as GameObject;
-
-            toolManager.Setup();
-        }
+        //     toolManager.Setup();
+        // }
     }
 
     private IEnumerator GameLoop()
@@ -83,18 +83,19 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundStarting()
     {
+        Debug.Log("RoundStarting");
         ResetCakeAndTools();
         DisableControls();
         CameraRigControl.Reset(CameraPlayPoint);
 
-        MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
+        CanvasControl.MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 
         yield return _StartWait;
     }
 
     private IEnumerator RoundPlaying()
     {
-        MessageText.text = string.Empty;
+        CanvasControl.MessageText.text = string.Empty;
         EnableControls();
 
         while (!PlayFinished())
@@ -107,7 +108,7 @@ public class GameManager : MonoBehaviour
     {
         DisableControls();
 
-        MessageText.text = "出来たあああああぁぁあぁ!";
+        CanvasControl.MessageText.text = "出来たあああああぁぁあぁ!";
 
         yield return _FinishWait;
     }
@@ -120,12 +121,12 @@ public class GameManager : MonoBehaviour
     
     private void ResetCakeAndTools()
     {
-        CakeManager.Reset();
+        CakeManager.Reset(CakeSpawnPoint);
 
-        foreach(ToolManager toolManager in ToolManagers)
-        {
-            toolManager.Reset();
-        }
+        // foreach(ToolManager toolManager in ToolManagers)
+        // {
+        //     toolManager.Reset();
+        // }
     }
 
     private void EnableControls()
