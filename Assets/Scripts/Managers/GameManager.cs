@@ -12,9 +12,10 @@ public class GameManager : MonoBehaviour
     // 終了アニメーション(「できたぁぁぁぁ！！」等のテキスト表示含むの所要時間)
     public float FinishWait = 3f; 
 
-    public CameraRigControl CameraRigControl;
     public CanvasControl CanvasControl;
-
+    
+    public float CameraMoveSpeed = 6f;
+    public CameraRigControl CameraRigControl;
     public Transform CameraStartPoint;
     public Transform CameraPlayPoint;
 
@@ -79,8 +80,10 @@ public class GameManager : MonoBehaviour
         DisableControls();
 
         float currentTime = 0;
+        
+
         while (currentTime <= 1 ){
-            currentTime += Time.deltaTime;
+            currentTime += Time.deltaTime * CameraMoveSpeed;
             CameraRigControl.Move(CameraPlayPoint, currentTime);
             yield return new WaitForEndOfFrame();
         }
