@@ -7,6 +7,8 @@ public class CameraRigControl : MonoBehaviour
   private Camera Camera;
   private Vector3 MoveVelocity;
 
+  private Vector3 StartAngles;
+
   private void Awake()
   {
     Camera = GetComponentInChildren<Camera>();
@@ -15,19 +17,25 @@ public class CameraRigControl : MonoBehaviour
   public void Init(Transform CameraStartPoint)
   {
     Camera.transform.localPosition = CameraStartPoint.localPosition;
-    Camera.transform.eulerAngles = CameraStartPoint.rotation.eulerAngles;
+    Camera.transform.eulerAngles = CameraStartPoint.eulerAngles;
+    StartAngles = CameraStartPoint.eulerAngles;
   }
 
-  private void Move(Transform DesiredPoint)
+  public void Move(Transform DesiredPoint, float Time)
   {
-    Camera.transform.position = Vector3.SmoothDamp
-      (
-        Camera.transform.position,
-        DesiredPoint.position,
-        ref MoveVelocity,
-        DampTime
-      );
+    
+    float yAngle = Mathf.LerpAngle(StartAngles.y, DesiredPoint.eulerAngles.y, Time);
+    
+    Debug.Log("yAngle" + yAngle);
 
-    Camera.transform.Rotate(90.0f, 0.0f, 0.0f);
+    Camera.transform.eulerAngles = new Vector3(0, yAngle, 0);
+
+    // Camera.transform.position = Vector3.SmoothDamp
+    //   (
+    //     Camera.transform.position,
+    //     DesiredPoint.position,
+    //     ref MoveVelocity,
+    //     DampTime
+    //   );
   }
 }

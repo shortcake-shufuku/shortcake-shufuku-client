@@ -77,7 +77,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("RoundStarting");
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Init(CameraPlayPoint);
+
+        float currentTime = 0;
+        while (currentTime <= 1 ){
+            currentTime += Time.deltaTime;
+            CameraRigControl.Move(CameraPlayPoint, currentTime);
+            yield return new WaitForEndOfFrame();
+        }
 
         CanvasControl.MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 
