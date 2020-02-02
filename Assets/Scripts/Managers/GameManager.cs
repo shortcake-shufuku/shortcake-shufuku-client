@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
     public float FinishWait = 3f; 
 
     public CameraRigControl CameraRigControl;
+
+    public Transform CameraStartPoint;
+    public Transform CameraPlayPoint;
+
     public Text MessageText;
 
     // 壊れたり直したりするケーキ。あとでもしかしたら目的別に生成するかもしれないけど。
@@ -32,6 +36,8 @@ public class GameManager : MonoBehaviour
         _FinishWait = new WaitForSeconds(FinishWait);
         _PlayTime = new WaitForSeconds(PlayTime);
         
+        Debug.Log("hai");
+
         SpawnAllTools();
 
         StartCoroutine(GameLoop());
@@ -63,7 +69,7 @@ public class GameManager : MonoBehaviour
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset();
+        CameraRigControl.Reset(CameraStartPoint);
 
         yield return _StartWait;
 
@@ -79,7 +85,7 @@ public class GameManager : MonoBehaviour
     {
         ResetCakeAndTools();
         DisableControls();
-        CameraRigControl.Reset();
+        CameraRigControl.Reset(CameraPlayPoint);
 
         MessageText.text = "始め！"; //TODO: もっとマシな開始メッセージ
 
