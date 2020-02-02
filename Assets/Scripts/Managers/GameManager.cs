@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public Transform CameraStartPoint;
     public Transform CameraPlayPoint;
 
+    public Transform Player;
+
     // 壊れたり直したりするケーキ。あとでもしかしたら目的別に生成するかもしれないけど。
     public GameObject CakePrefab;
     public CakeManager CakeManager;
@@ -63,7 +65,7 @@ public class GameManager : MonoBehaviour
         DisableControls();
         CameraRigControl.Init(CameraStartPoint);
         
-        CanvasControl.ToggleTimer(false);
+        CanvasControl.RoundEnding();
 
         yield return _StartWait;
 
@@ -81,8 +83,8 @@ public class GameManager : MonoBehaviour
         ResetCakeAndTools();
         DisableControls();
 
-        CanvasControl.ToggleTimer(true);
-        
+        CanvasControl.RoundStart();
+
         float currentTime = 0;
         
         while (currentTime <= 1 ){
@@ -98,6 +100,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
+        CameraRigControl.RoundStart();
+
         CanvasControl.MessageText.text = string.Empty;
 
         EnableControls();
@@ -108,6 +112,12 @@ public class GameManager : MonoBehaviour
             timeLeft -= Time.deltaTime;
             CanvasControl.UpdateTimer(timeLeft, PlayTime);
 
+            Vector3 pos = CameraRigControl.TopDownCamera.ScreenToWorldPoint(Input.mousePosition);
+            pos.y = 1.7f;
+
+            // Vector3 mousePos = Input.mousePosition;
+            Player.position = pos;
+            Debug.Log(pos);
             yield return new WaitForEndOfFrame();
         }
     }
@@ -117,6 +127,7 @@ public class GameManager : MonoBehaviour
         DisableControls();
 
         CanvasControl.MessageText.text = "出来たあああああぁぁあぁ!";
+        CanvasControl.RoundEnding();
 
         yield return _FinishWait;
     }

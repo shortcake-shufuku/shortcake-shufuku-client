@@ -22,9 +22,16 @@ public class CanvasControl : MonoBehaviour
         TimerSlider = transform.Find("Timer/TimerSlider").gameObject.GetComponent<Slider>();
     }
 
-    public void ToggleTimer(bool flag)
+    public void RoundStart()
     {
-        Timer.SetActive(flag);
+        Timer.SetActive(true);
+        Button.gameObject.SetActive(false);
+    }
+
+    public void RoundEnding()
+    {
+        Timer.SetActive(false);
+        Button.gameObject.SetActive(true);
     }
 
     public void UpdateTimer(float TimeLeft, float PlayTime)
