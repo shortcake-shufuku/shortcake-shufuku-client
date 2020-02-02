@@ -8,5 +8,6 @@ public class StartGame : MonoBehaviour
     public void StartTheGame()
     {
       Debug.Log("start!");
+      Debug.Log("start!");
     }
 }

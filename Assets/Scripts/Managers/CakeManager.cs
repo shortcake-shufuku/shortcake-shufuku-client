@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CakeManager : MonoBehaviour
 {
-    public Transform SpawnPoint;
-
     [HideInInspector] public GameObject Instance;
 
     public void Setup()
@@ -13,7 +11,7 @@ public class CakeManager : MonoBehaviour
         // TODO
     }
 
-    public void Reset()
+    public void Reset(Transform SpawnPoint)
     {
         Instance.transform.position = SpawnPoint.position;
         Instance.transform.rotation = SpawnPoint.rotation;
