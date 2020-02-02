@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
         ResetCakeAndTools();
         DisableControls();
         CameraRigControl.Init(CameraStartPoint);
+        
+        CanvasControl.ToggleTimer(false);
 
         yield return _StartWait;
 
@@ -79,9 +81,10 @@ public class GameManager : MonoBehaviour
         ResetCakeAndTools();
         DisableControls();
 
+        CanvasControl.ToggleTimer(true);
+        
         float currentTime = 0;
         
-
         while (currentTime <= 1 ){
             currentTime += Time.deltaTime * CameraMoveSpeed;
             CameraRigControl.Move(CameraPlayPoint, currentTime);
@@ -96,11 +99,16 @@ public class GameManager : MonoBehaviour
     private IEnumerator RoundPlaying()
     {
         CanvasControl.MessageText.text = string.Empty;
+
         EnableControls();
 
-        while (!PlayFinished())
-        {
-            yield return _PlayTime;
+        float timeLeft = PlayTime;
+        
+        while (timeLeft >= 0f ){
+            timeLeft -= Time.deltaTime;
+            CanvasControl.UpdateTimer(timeLeft, PlayTime);
+
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -113,12 +121,6 @@ public class GameManager : MonoBehaviour
         yield return _FinishWait;
     }
 
-    private bool PlayFinished()
-    {
-        // TODO: プレイ時間制限前にプレイが終了する条件？
-        return true;
-    }
-    
     private void ResetCakeAndTools()
     {
         CakeManager.Reset(CakeSpawnPoint);
