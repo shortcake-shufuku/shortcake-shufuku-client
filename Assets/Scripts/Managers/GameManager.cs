@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
             CakeSpawnPoint.rotation
         ) as GameObject;
 
+        CakeManager.Instance.SetActive(true);
     }
 
     private IEnumerator GameLoop()
